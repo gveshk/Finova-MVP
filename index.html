@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Loading Popup Styles */
+        #loadingPopup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+    .clay {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50px;
+        box-shadow: 20px 20px 60px #bebebe,
+                   -20px -20px 60px #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .clay-sm {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 25px;
+        box-shadow: 8px 8px 24px #bebebe,
+                   -8px -8px 24px #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .chat-container {
+        height: calc(100vh - 180px);
+    }
+    .fixed-bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        background-color: #f8f9fa; /* Adjust as needed */
+        box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    }
+</style>
+<body class="bg--100">
+    <!-- Loading Popup -->
+    <div id="loadingPopup">
+        Loading...
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div class="clay p-8 w-full max-w-md">
+            <img src="./Finova.jpg" alt="Finova Logo" class="mb-4 mx-auto" style="max-width: 200px;">
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-3xl clay-sm border-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <input type="password" id="password" placeholder="Password" class="w-full p-4 rounded-3xl clay-sm border-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full p-4 rounded-3xl clay-sm bg-blue-500 text-white font-semibold hover:bg-blue-600 transition duration-300">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mode Selection -->
+    <div id="modeSelection" class="min-h-screen hidden bg-gray-50 p-4">
+        <div class="clay p-8 max-w-4xl mx-auto mt-10">
+            <img src="./Finova.jpg" alt="Finova Logo" class="mb-4 mx-auto" style="max-width: 200px; position: absolute; top: 10px; left: 10px;">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Select Mode</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button class="clay-sm p-6 text-left hover:scale-105 transition duration-300" onclick="selectMode('financial-research')">
+                    <i class="bi bi-graph-up text-3xl mb-2 text-blue-500"></i>
+                    <h3 class="text-xl font-semibold">Financial Research</h3>
+                    <p class="text-gray-600">Deep dive into market analysis and research</p>
+                </button>
+                <button class="clay-sm p-6 text-left hover:scale-105 transition duration-300" onclick="selectMode('personal-finance')">
+                    <i class="bi bi-wallet2 text-3xl mb-2 text-green-500"></i>
+                    <h3 class="text-xl font-semibold">Personal Finance</h3>
+                    <p class="text-gray-600">Manage your personal finances effectively</p>
+                </button>
+                <button class="clay-sm p-6 text-left hover:scale-105 transition duration-300" onclick="selectMode('investment')">
+                    <i class="bi bi-cash-coin text-3xl mb-2 text-yellow-500"></i>
+                    <h3 class="text-xl font-semibold">Investment</h3>
+                    <p class="text-gray-600">Investment strategies and portfolio management</p>
+                </button>
+                <button class="clay-sm p-6 text-left hover:scale-105 transition duration-300" onclick="selectMode('expense-control')">
+                    <i class="bi bi-calculator text-3xl mb-2 text-red-500"></i>
+                    <h3 class="text-xl font-semibold">Expense Control</h3>
+                    <p class="text-gray-600">Track and optimize your expenses</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Interface -->
+    <div id="chatInterface" class="min-h-screen hidden bg-gray-50 p-4">
+        <div class="clay p-6 max-w-6xl mx-auto">
+            <img src="./Finova.jpg" alt="Finova Logo" class="mb-4 mx-auto" style="max-width: 165px; position: absolute; top: 10px; left: 10px;">
+            <div class="flex items-center justify-between mb-6">
+                <button onclick="showModeSelection()" class="clay-sm p-2 px-4">
+                    <i class="bi bi-arrow-left"></i> Back
+                </button>
+                <h2 id="currentMode" class="text-2xl font-bold text-gray-800">Mode</h2>
+                <div class="w-20"></div>
+            </div>
+            <div class="chat-container overflow-y-auto clay-sm p-6 mb-6">
+                <div id="chatMessages" class="space-y-4"></div>
+            </div>
+                <form id="chatForm" class="flex">
+                    <input type="text" id="userInput" placeholder="Type your message here..." class="flex-1 p-4 rounded-3xl clay-sm border-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="clay-sm p-4 px-8 bg-blue-500 text-white rounded-3xl hover:bg-blue-600 transition duration-300">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </form>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const modeSelection = document.getElementById('modeSelection');
+        const chatInterface = document.getElementById('chatInterface');
+        const currentMode = document.getElementById('currentMode');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const loginForm = document.getElementById('loginForm');
+        const loadingPopup = document.getElementById('loadingPopup');
+
+        // Login Handler
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            loginPage.classList.add('hidden');
+            modeSelection.classList.remove('hidden');
+        });
+
+        // Mode Selection Handler
+        function selectMode(mode) {
+            modeSelection.classList.add('hidden');
+            chatInterface.classList.remove('hidden');
+            currentMode.textContent = mode.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+            addMessage('system', `Welcome to ${currentMode.textContent} mode! How can I help you today?`);
+        }
+
+        // Back to Mode Selection
+        function showModeSelection() {
+            chatInterface.classList.add('hidden');
+            modeSelection.classList.remove('hidden');
+            chatMessages.innerHTML = '';
+        }
+
+        // Chat Functionality
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage('user', message);
+                input.value = '';
+                // Show loading popup
+                loadingPopup.style.display = 'flex';
+
+                getGeminiResponse(message)
+                  .then(response => {
+                    addMessage('system', response, true); // Render as HTML
+                  })
+                  .catch(error => {
+                    console.error("Error calling Gemini API:", error);
+                    addMessage('system', "Sorry, I couldn't process your request at this time.");
+                  })
+                  .finally(() => {
+                    // Hide loading popup
+                    loadingPopup.style.display = 'none';
+                  });
+            }
+        });
+
+        function addMessage(type, content, isHtml = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'}`;
+            
+            const messageBubble = document.createElement('div');
+            messageBubble.className = `clay-sm p-4 max-w-[80%] ${type === 'user' ? 'bg-blue-500 text-white' : 'bg-white'} rounded-3xl`;
+            
+            if (isHtml) {
+              // Basic markdown to HTML conversion (for bold and italics)
+              let htmlContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+              htmlContent = htmlContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
+              htmlContent = htmlContent.replace(/\n/g, '<br>'); // Convert newlines to <br>
+              messageBubble.innerHTML = htmlContent;
+            } else {
+              messageBubble.textContent = content;
+            }
+            
+            messageDiv.appendChild(messageBubble);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+    <script src="main.js"></script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
